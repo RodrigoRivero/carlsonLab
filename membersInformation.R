@@ -4,7 +4,6 @@
 iceCreamFlavor
 musicGenre
 
-
 # Sita
 iceCreamFlavor
 musicGenre
@@ -18,5 +17,5 @@ iceCreamFlavor
 musicGenre
 
 # Rodrigo
-iceCreamFlavor
-musicGenre
+iceCreamFlavor <- "Chocolate"
+musicGenre <- "Indie rock"
