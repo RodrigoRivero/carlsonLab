@@ -5,16 +5,16 @@ iceCreamFlavor
 musicGenre
 
 # Sita
-iceCreamFlavor
-musicGenre
+iceCreamFlavor <- "chocolate"
+musicGenre <- "rock"
 
 # Char
 iceCreamFlavor
 musicGenre
 
 # Tanya 
-iceCreamFlavor
-musicGenre
+iceCreamFlavor <- "strawberry"
+musicGenre <- "everything except country and screamo"
 
 # Rodrigo
 iceCreamFlavor <- "Chocolate"
