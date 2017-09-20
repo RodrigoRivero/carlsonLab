@@ -9,8 +9,8 @@ iceCreamFlavor
 musicGenre
 
 # Char
-iceCreamFlavor
-musicGenre
+iceCreamFlavor <-"raspberry ripple"
+musicGenre <- "hipster stuff yo"
 
 # Tanya 
 iceCreamFlavor
