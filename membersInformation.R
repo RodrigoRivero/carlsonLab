@@ -19,3 +19,7 @@ musicGenre <- "everything except country and screamo"
 # Rodrigo
 iceCreamFlavor <- "Chocolate"
 musicGenre <- "Indie rock"
+
+# Gerhardt
+iceCreamFlavor <- "anythingvegan"
+musicGenre <- "free jazz"
