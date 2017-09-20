@@ -1,5 +1,22 @@
-# This is a test file
-myName <- "Rodrigo Rivero Castro "
-myAge <- "22"
-myNameAndAge <- c(myName, myAge)
-print(myNameAndAge)
+# Information about the Carslon Lab members
+
+# Kim
+iceCreamFlavor
+musicGenre
+
+
+# Sita
+iceCreamFlavor
+musicGenre
+
+# Char
+iceCreamFlavor
+musicGenre
+
+# Tanya 
+iceCreamFlavor
+musicGenre
+
+# Rodrigo
+iceCreamFlavor
+musicGenre
