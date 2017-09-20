@@ -1,8 +1,8 @@
 # Information about the Carslon Lab members
 
 # Kim
-iceCreamFlavor
-musicGenre
+iceCreamFlavor <- "huckleberry"
+musicGenre <- "jazz"
 
 # Sita
 iceCreamFlavor
