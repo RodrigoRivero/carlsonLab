@@ -9,8 +9,8 @@ iceCreamFlavor <- "chocolate"
 musicGenre <- "rock"
 
 # Char
-iceCreamFlavor
-musicGenre
+iceCreamFlavor <- "raspberry ripple"
+musicGenre <- "hipster stuff yo"
 
 # Tanya 
 iceCreamFlavor <- "strawberry"
