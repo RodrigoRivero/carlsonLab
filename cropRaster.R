@@ -46,3 +46,6 @@ histinfo<-hist(newtif_crop)
 histinfo
 #----------------------------------------------------------
 
+library(raster)
+writeRaster(nameOfYourObject, filename = "dinamica/data/croppedModel/inputMaps/cropped2012.tif", datatype = "INT2S", format = "GTiff",overwrite=TRUE)
+
