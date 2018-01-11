@@ -2,7 +2,7 @@ library(raster)
 library(rgdal)
 library(maptools)
 library(sp)
-newtif <- raster(" ~/googleDrive/tomoProject/MODIS_jan4/test_Band2h08v05_WGS.tif")
+newtif <- raster(" ~/googleDrive/tomoProject/MODIS_jan4/test_Band12h08v05_2400WGS5.tif")
 
 
 
@@ -39,6 +39,7 @@ newtif_crop
 #plot the cropped section of newtif
 plot(newtif_crop)
 
+#see a histogram of the data in newtif_crop
 hist(newtif_crop)
 
 histinfo<-hist(newtif_crop)
