@@ -6,21 +6,28 @@ import os.path
 import glob
 
 ### opening the file
-# modisHDF = ("/Users/Char/googleDrive/tomoProject/MODIS_h08v05/MOD09GA.A2017173.h08v05.006.2017175031514.hdf")
+
+# Directory to scan for HDF files and save output TXT
 root = "/Users/Char/googleDrive/tomoProject/MODIS_h08v05/"
 
+# Different resolutions seem to need different pixel start positions
+# Here each start position can be defined by the resolution of the file
+# The start position is the top left corner, in the format (x, y)
 startIndicesByResolution = {
     "500m" : (1134*2, 180*2),
     "1km" : (1134, 180)
 }
 
+# Same as above, but for how wide/long the selected rectangle should be
 countsByResolution = {
     "500m" : (2*2, 3*2),
     "1km" : (2, 3)
 }
 
+# Not all HDF files have a resolution, assume this resolution if we can't find one
 defaultResolutionIfNoneFound = "1km"
 
+# Names of the bands to pull out
 bands = ["state_1km_1",
         "SensorZenith_1",
         "SensorAzimuth_1",
@@ -31,12 +38,11 @@ bands = ["state_1km_1",
         "sur_refl_b03_1",
         "sur_refl_b04_1"]
 
+# Find all HDF files in the directory defined above
+# Find all HDF files including inside sub-directories hdfFiles = glob.glob(os.path.join(root, "**/*.hdf"))
 hdfFiles = glob.glob(os.path.join(root, "*.hdf"))
 
-# hdfFiles = ["/Users/Char/googleDrive/tomoProject/MODIS_h08v05/MOD09GA.A2017173.h08v05.006.2017175031514.hdf"]
-# bands = [bands[0]]
-
-
+# Takes the data and writes it to the file
 def writeToFile(fileName, pixels, ndvi, evi, evi2):
     print("Writing to " + fileName)
     hdfName = os.path.splitext(os.path.split(fileName)[1])[0]
@@ -52,12 +58,17 @@ def writeToFile(fileName, pixels, ndvi, evi, evi2):
         file_out.write("EVI2\n")
         file_out.write(str(evi2) + "\n")
 
+# Loop over every HDF file found
 for hdfFile in hdfFiles:
+    #Reads in HDF file
     hdfSD = SD(hdfFile, SDC.READ)
+    #Selects only the bands specified above
     selectedBands = [hdfSD.select(band) for band in bands]
     selectedPixels = {}
+    # Select only the desired range of pixels for each band
     for band in selectedBands:
         bandName = band.info()[0]
+        # Find the resolution, or default resolution
         resolution = band.attributes()["Nadir Data Resolution"] if "Nadir Data Resolution" in band.attributes() else defaultResolutionIfNoneFound
         startIndices = startIndicesByResolution[resolution]
         counts = countsByResolution[resolution]
@@ -65,46 +76,25 @@ for hdfFile in hdfFiles:
         selectedPixels[bandName] = pixels
         print(bandName)
         print(pixels)
+    
+    # Calculate NDVI
     ndvi_top = (selectedPixels["sur_refl_b01_1"] - selectedPixels["sur_refl_b02_1"]).astype(float)
     ndvi_bottom = (selectedPixels["sur_refl_b02_1"] + selectedPixels["sur_refl_b01_1"]).astype(float)
     ndvi =  ndvi_top / ndvi_bottom 
     print("ndvi", ndvi)
 
+    # Calculate EVI
     evi_top = 2.5 * (selectedPixels["sur_refl_b02_1"] - selectedPixels["sur_refl_b01_1"])
     evi_bottom = selectedPixels["sur_refl_b02_1"] + (6 * selectedPixels["sur_refl_b01_1"]) + (7.5 * selectedPixels["sur_refl_b03_1"]) + 1
     evi = (evi_top / evi_bottom) / 10000.0
     print("evi", evi)
 
+    # Calculate EVI2
     evi2_top = 2.5 * (selectedPixels["sur_refl_b02_1"] - selectedPixels["sur_refl_b01_1"])
     evi2_bottom = selectedPixels["sur_refl_b02_1"] + (2.4 * selectedPixels["sur_refl_b01_1"]) + 1
     evi2 = (evi2_top / evi2_bottom) / 10000.0
     print("evi2", evi2)
 
+    # Output file name is the same as the HDF file, but with the extension '.txt'
     outputTextFile = os.path.splitext(hdfFile)[0] + ".txt"
     writeToFile(outputTextFile, selectedPixels, ndvi, evi, evi2)
-
-# modisTest = SD(modisHDF, SDC.READ)
-
-### list the available subdatasets
-#pprint(modisTest.datasets())
-
-##read the selected band dataset to an array
-# band12 = modisTest.select('sur_refl_b01_1')
-#band12read = band12.get()
-
-#print(band12read)
-
-### slice out the desired pixels from the array
-
-
-#######
-# test = band12.get(start=(180:181),count=(1134:1136))
-
-# pprint(test)
-
-
-### 
-#modisDirectory = file.datasets()
-
-#for idx,sds in enumerate(modisDirectory.keys()):
- #   print idx,sds
