@@ -14,13 +14,13 @@ root = "/Users/Char/googleDrive/tomoProject/MODIS_h08v05/"
 # Here each start position can be defined by the resolution of the file
 # The start position is the top left corner, in the format (x, y)
 startIndicesByResolution = {
-    "500m" : (1134*2, 180*2),
-    "1km" : (1134, 180)
+    "500m" : (358, 2266),
+    "1km" : (179, 1133)
 }
 
 # Same as above, but for how wide/long the selected rectangle should be
 countsByResolution = {
-    "500m" : (2*2, 3*2),
+    "500m" : (4, 6),
     "1km" : (2, 3)
 }
 
@@ -36,7 +36,10 @@ bands = ["state_1km_1",
         "sur_refl_b01_1",
         "sur_refl_b02_1",
         "sur_refl_b03_1",
-        "sur_refl_b04_1"]
+        "sur_refl_b04_1",
+        "sur_refl_b05_1",
+        "sur_refl_b06_1",
+        "sur_refl_b07_1",]
 
 # Find all HDF files in the directory defined above
 # Find all HDF files including inside sub-directories hdfFiles = glob.glob(os.path.join(root, "**/*.hdf"))
@@ -48,7 +51,7 @@ def writeToFile(fileName, pixels, ndvi, evi, evi2):
     hdfName = os.path.splitext(os.path.split(fileName)[1])[0]
     with open(fileName, "w") as file_out:
         file_out.write(hdfName + "\n")
-        for bandName in pixels:
+        for bandName in bands:
             file_out.write(bandName + "\n")
             file_out.write(str(pixels[bandName]) + "\n")
         file_out.write("NDVI\n")
@@ -62,6 +65,7 @@ def writeToFile(fileName, pixels, ndvi, evi, evi2):
 for hdfFile in hdfFiles:
     #Reads in HDF file
     hdfSD = SD(hdfFile, SDC.READ)
+    print(hdfSD.datasets())
     #Selects only the bands specified above
     selectedBands = [hdfSD.select(band) for band in bands]
     selectedPixels = {}
@@ -78,21 +82,21 @@ for hdfFile in hdfFiles:
         print(pixels)
     
     # Calculate NDVI
-    ndvi_top = (selectedPixels["sur_refl_b01_1"] - selectedPixels["sur_refl_b02_1"]).astype(float)
+    ndvi_top = (selectedPixels["sur_refl_b02_1"] - selectedPixels["sur_refl_b01_1"]).astype(float)
     ndvi_bottom = (selectedPixels["sur_refl_b02_1"] + selectedPixels["sur_refl_b01_1"]).astype(float)
     ndvi =  ndvi_top / ndvi_bottom 
     print("ndvi", ndvi)
 
     # Calculate EVI
     evi_top = 2.5 * (selectedPixels["sur_refl_b02_1"] - selectedPixels["sur_refl_b01_1"])
-    evi_bottom = selectedPixels["sur_refl_b02_1"] + (6 * selectedPixels["sur_refl_b01_1"]) + (7.5 * selectedPixels["sur_refl_b03_1"]) + 1
-    evi = (evi_top / evi_bottom) / 10000.0
+    evi_bottom = selectedPixels["sur_refl_b02_1"] + (6 * selectedPixels["sur_refl_b01_1"]) + (7.5 * selectedPixels["sur_refl_b03_1"]) + 1 * 10000.0
+    evi = (evi_top / evi_bottom) 
     print("evi", evi)
 
     # Calculate EVI2
     evi2_top = 2.5 * (selectedPixels["sur_refl_b02_1"] - selectedPixels["sur_refl_b01_1"])
-    evi2_bottom = selectedPixels["sur_refl_b02_1"] + (2.4 * selectedPixels["sur_refl_b01_1"]) + 1
-    evi2 = (evi2_top / evi2_bottom) / 10000.0
+    evi2_bottom = selectedPixels["sur_refl_b02_1"] + (2.4 * selectedPixels["sur_refl_b01_1"]) + 1 * 10000.0
+    evi2 = (evi2_top / evi2_bottom) 
     print("evi2", evi2)
 
     # Output file name is the same as the HDF file, but with the extension '.txt'
